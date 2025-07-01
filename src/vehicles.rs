@@ -101,7 +101,19 @@ impl Vehicles {
 
         canvas.fill_rect(Rect::new(vehicle.x, vehicle.y,50, 50)).unwrap();
 
-        if vehicle.direction == Direction::North {
+        if  vehicle.y <= 350 && vehicle.direction == Direction::North && vehicle.route == Route::Right {
+            println!("{:?}", vehicle);
+            vehicle.x += 2
+        } else if  vehicle.y <= 300 && vehicle.direction == Direction::North && vehicle.route == Route::Left {
+            println!("{:?}", vehicle);
+            vehicle.x -= 2
+        } else if  vehicle.y >= 300 && vehicle.direction == Direction::South && vehicle.route == Route::Right {
+            println!("{:?}", vehicle);
+            vehicle.x -= 2
+        } else if  vehicle.y >= 350 && vehicle.direction == Direction::South && vehicle.route == Route::Left {
+            println!("{:?}", vehicle);
+            vehicle.x += 2
+        } else if vehicle.direction == Direction::North {
             vehicle.y -= 2;
         } else if vehicle.direction == Direction::South {
             vehicle.y += 2;
