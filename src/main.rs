@@ -2,7 +2,6 @@ use sdl2::pixels::Color;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use std::time::Duration;
-use std::time::Instant;
 
 mod vehicles;
 use vehicles::*;
