@@ -2,6 +2,10 @@ use sdl2::pixels::Color;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use std::time::Duration;
+use std::time::Instant;
+
+mod vehicles;
+use vehicles::*;
 
 use road_intersection::*;
 
@@ -15,26 +19,62 @@ pub fn main() {
         .unwrap();
 
     let mut canvas = window.into_canvas().build().unwrap();
-     canvas.set_draw_color(Color::BLACK);
-
+    canvas.set_draw_color(Color::BLACK);
     canvas.present();
 
     let mut event_pump = sdl_context.event_pump().unwrap();
-    'running: loop {
 
+    let mut all_vehicles = Vehicles::new();
+    // let mut last_spawn_time = Instant::now();
+    
+
+    'running: loop {
         for event in event_pump.poll_iter() {
             match event {
-                Event::Quit {..} |
-                Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
+                Event::Quit { .. }
+                | Event::KeyDown {
+                    keycode: Some(Keycode::Escape),
+                    ..
+                } => {
                     break 'running;
-                },
+                }
+                Event::KeyDown { keycode: Some(key), .. } => {
+                        match key {
+                            Keycode::Up => {
+                                all_vehicles.add_vehicle(Direction::North);
+                            }
+                            Keycode::Down => {
+                                all_vehicles.add_vehicle(Direction::South);
+                            }
+                            Keycode::Left => {
+                                all_vehicles.add_vehicle(Direction::East);
+                            }
+                            Keycode::Right => {
+                                all_vehicles.add_vehicle(Direction::West);
+                            }
+                            Keycode::R => {
+                                all_vehicles.add_random_vehicle();
+                            }
+                            _ => {}
+                    }
+                }
                 _ => {}
             }
         }
 
-        drwa_roads(&mut canvas);
+        canvas.set_draw_color(Color::BLACK);
+        canvas.clear();
 
-        canvas.present(); // Update the canvas with the drawing
-        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60)); // Limit to ~60 FPS
+        drwa_roads(&mut canvas);
+        all_vehicles.draw_vehicles(&mut canvas);
+        // draw_vehicles(&all_vehicles, &mut canvas);
+
+
+        // canvas.set_draw_color(Color::RED);
+        // canvas.fill_rect(Rect::new(50, 50, 50, 50)).unwrap();
+
+        canvas.present();
+        ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
+
     }
 }
