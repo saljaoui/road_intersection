@@ -54,7 +54,7 @@ impl Vehicles {
     }
 
     pub fn add_vehicle(&mut self, direction: Direction) {
-        let route = random_color();
+        let route = random_route();
         if direction == Direction::South {
             self.vehicles.push(Vehicle{
                 route: route,
@@ -98,7 +98,7 @@ impl Vehicles {
         } else {
             canvas.set_draw_color(Color::BLUE);
         }
-        
+
         canvas.fill_rect(Rect::new(vehicle.x, vehicle.y,50, 50)).unwrap();
 
         if vehicle.direction == Direction::North {
@@ -119,7 +119,7 @@ impl Vehicles {
     }
 }
 
-fn random_color() -> Route {
+fn random_route() -> Route {
     let rng = rand::thread_rng().gen_range(0..3);
     if rng == 0 {
         return Route::Left;
